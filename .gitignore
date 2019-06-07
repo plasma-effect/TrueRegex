@@ -1,0 +1,9 @@
+﻿################################################################################
+# この .gitignore ファイルは Microsoft(R) Visual Studio によって自動的に作成されました。
+################################################################################
+
+/TrueRegex/packages
+/TrueRegex/TrueRegex/obj
+/TrueRegex/TrueRegexTest/bin/Debug
+/TrueRegex/TrueRegexTest/obj/Debug
+/TrueRegex/.vs/TrueRegex/v16/Server/sqlite3
