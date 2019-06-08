@@ -5,13 +5,16 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/plasma-effect/TrueRegex</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Match string to Regular Expression(defined in Computer Science)</Description>
     <PackageProjectUrl>https://github.com/plasma-effect/TrueRegex</PackageProjectUrl>
     <Authors>plasma-effect</Authors>
     <Copyright>plasma-effect 2019</Copyright>
+    <PackageReleaseNotes>Add Regex.FirstMatch and Regex.LastMatch
+It is possible to match string by uninstanced expr</PackageReleaseNotes>
+    <Company />
   </PropertyGroup>
 
   <ItemGroup>

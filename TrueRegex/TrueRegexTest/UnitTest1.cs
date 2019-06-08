@@ -122,5 +122,30 @@ namespace TrueRegexTest
                 Assert.AreEqual(regex.Match(""), false);
             }
         }
+
+        [TestMethod]
+        public void DirectMatchTest()
+        {
+            {
+                var expr = String.Create("123");
+                Assert.AreEqual(expr.Match("123"), true);
+                Assert.AreEqual(expr.Match("124"), false);
+                Assert.AreEqual(expr.Match("12"), false);
+                Assert.AreEqual(expr.Match(""), false);
+            }
+        }
+
+        [TestMethod]
+        public void FirstAndLastTest()
+        {
+            {
+                var regex = Create(+String.Create("a"));
+                Assert.AreEqual(regex.FirstMatch("aaa"), 1);
+                Assert.AreEqual(regex.LastMatch("aaa"), 3);
+                Assert.AreEqual(regex.LastMatch("aab"), 2);
+                Assert.AreEqual(regex.FirstMatch("baa"), null);
+                Assert.AreEqual(regex.LastMatch("baa"), null);
+            }
+        }
     }
 }

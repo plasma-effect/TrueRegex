@@ -6,7 +6,14 @@ using static TrueRegex.Utility;
 
 namespace TrueRegex
 {
-    public class Regex
+    public interface IRegex
+    {
+        bool Match(IEnumerable<char> str);
+        int? FirstMatch(IEnumerable<char> str);
+        int? LastMatch(IEnumerable<char> str);
+    }
+
+    public class Regex:IRegex
     {
         List<Instance> instances;
         int startIndex;
@@ -15,20 +22,75 @@ namespace TrueRegex
             this.instances = new List<Instance>();
             this.startIndex = expr.Instance(this);
         }
+
+        private bool Check(BoolSet flags)
+        {
+            bool inner(int i)
+            {
+                return this.instances[i].Goal;
+            }
+            return flags.Any(inner);
+        }
         
         public bool Match(IEnumerable<char> str)
         {
-            var flags = new BoolSet();
-            var nexts = new BoolSet();
-            var epsil = new BoolSet();
-            var enext = new BoolSet();
-            flags[this.startIndex] = true;
-            EpsilonMove(flags, epsil, enext);
+            InitialSet(out var flags, out var nexts, out var epsil, out var enext);
             foreach (var c in str)
             {
                 OneStep(flags, nexts, epsil, enext, c);
             }
-            return flags.Any(i => this.instances[i].Goal);
+            return Check(flags);
+        }
+
+        public int? FirstMatch(IEnumerable<char> str)
+        {
+            InitialSet(out var flags, out var nexts, out var epsil, out var enext);
+            var len = 0;
+            if (Check(flags))
+            {
+                return len;
+            }
+            foreach(var c in str)
+            {
+                ++len;
+                OneStep(flags, nexts, epsil, enext, c);
+                if (Check(flags))
+                {
+                    return len;
+                }
+            }
+            return null;
+        }
+
+        public int? LastMatch(IEnumerable<char> str)
+        {
+            InitialSet(out var flags, out var nexts, out var epsil, out var enext);
+            int? ret = null;
+            var index = 0;
+            if (Check(flags))
+            {
+                ret = index;
+            }
+            foreach (var c in str)
+            {
+                ++index;
+                OneStep(flags, nexts, epsil, enext, c);
+                if (Check(flags))
+                {
+                    ret = index;
+                }
+            }
+            return ret;
+        }
+
+        private void InitialSet(out BoolSet flags, out BoolSet nexts, out BoolSet epsil, out BoolSet enext)
+        {
+            flags = new BoolSet();
+            nexts = new BoolSet();
+            epsil = new BoolSet();
+            enext = new BoolSet();
+            flags[this.startIndex] = true;
+            EpsilonMove(flags, epsil, enext);
         }
 
         private void OneStep(BoolSet flags, BoolSet nexts, BoolSet epsil, BoolSet enext, char c)

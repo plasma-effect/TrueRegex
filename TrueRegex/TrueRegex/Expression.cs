@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TrueRegex
 {
-    public abstract class Expression
+    public abstract class Expression:IRegex
     {
         internal abstract int Instance(Regex regex);
         public static OneRepeat operator+(Expression expr)
@@ -25,6 +25,33 @@ namespace TrueRegex
         public static Select operator |(Expression lhs, Expression rhs)
         {
             return new Select(lhs, rhs);
+        }
+
+        private Regex internalRegex;
+        private Regex InternalRegex
+        {
+            get
+            {
+                if(this.internalRegex is null)
+                {
+                    this.internalRegex = new Regex(this);
+                }
+                return this.internalRegex;
+            }
+        }
+        public bool Match(IEnumerable<char> str)
+        {
+            return this.InternalRegex.Match(str);
+        }
+
+        public int? FirstMatch(IEnumerable<char> str)
+        {
+            return this.InternalRegex.FirstMatch(str);
+        }
+
+        public int? LastMatch(IEnumerable<char> str)
+        {
+            return this.InternalRegex.FirstMatch(str);
         }
     }
 
