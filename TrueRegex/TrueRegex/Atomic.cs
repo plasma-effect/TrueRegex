@@ -20,19 +20,17 @@ namespace TrueRegex
 
         internal override int Instance(Regex regex)
         {
-            var terminal = new TerminalInstance(regex.Instances.Count, true);
-            regex.Instances.Add(terminal);
-            var instance = new InstancedExpr(regex.Instances.Count, terminal, this.func);
-            regex.Instances.Add(instance);
+            var terminal = regex.Add(new TerminalInstance(regex, true));
+            var instance = regex.Add(new InstancedExpr(regex, terminal, this.func));
             return instance.Index;
         }
 
         internal class InstancedExpr : Instance
         {
-            TerminalInstance next;
+            Instance next;
             Func<char, bool> func;
 
-            public InstancedExpr(int index, TerminalInstance next, Func<char, bool> func) : base(index, false)
+            public InstancedExpr(Regex regex, Instance next, Func<char, bool> func) : base(regex, false)
             {
                 this.next = next;
                 this.func = func;
@@ -54,17 +52,10 @@ namespace TrueRegex
                 }
             }
         }
-    }
 
-    /// <summary>
-    /// One character expr(match when [c] is in chars)
-    /// </summary>
-    public class Chars:Atomic
-    {
-        public Chars(params char[] chars) : base(c => chars.Contains(c))
+        public static Atomic Create(Func<char,bool> func)
         {
-
+            return new Atomic(func);
         }
     }
-
 }

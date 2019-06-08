@@ -6,15 +6,35 @@ namespace TrueRegex
     public abstract class Expression
     {
         internal abstract int Instance(Regex regex);
+        public static OneRepeat operator+(Expression expr)
+        {
+            return new OneRepeat(expr);
+        }
+        public static ZeroRepeat operator~(Expression expr)
+        {
+            return new ZeroRepeat(expr);
+        }
+        public static Sequence operator+(Expression lhs,Expression rhs)
+        {
+            return new Sequence(lhs, rhs);
+        }
+        public static Optional operator-(Expression expr)
+        {
+            return new Optional(expr);
+        }
+        public static Select operator |(Expression lhs, Expression rhs)
+        {
+            return new Select(lhs, rhs);
+        }
     }
 
     internal abstract class Instance
     {
-        protected Instance(int index, bool goal)
+        protected Instance(Regex regex, bool goal)
         {
-            this.Index = index;
+            this.Index = regex.Size;
             this.Goal = goal;
-            this.Epsilons = new List<int>();
+            this.Epsilons = new SortedSet<int>();
         }
 
         public virtual void Next(BoolSet flags, char c)
@@ -22,18 +42,21 @@ namespace TrueRegex
 
         }
         
-        public void AddEpsilon(int index)
+        public void AddEpsilon(params int[] indexes)
         {
-            this.Epsilons.Add(index);
+            foreach(var i in indexes)
+            {
+                this.Epsilons.Add(i);
+            }
         }
         public int Index { get; }
         public bool Goal { get; set; }
-        public List<int> Epsilons { get; }
+        public SortedSet<int> Epsilons { get; }
     }
 
     internal class TerminalInstance : Instance
     {
-        public TerminalInstance(int index, bool goal) : base(index, goal)
+        public TerminalInstance(Regex regex, bool goal) : base(regex, goal)
         {
 
         }

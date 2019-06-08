@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static TrueRegex.Utility;
 
 namespace TrueRegex
 {
@@ -18,17 +19,18 @@ namespace TrueRegex
 
         internal override int Instance(Regex regex)
         {
-            var start = regex.Instances.Count;
+            var start = regex.Size;
             var index = this.expr.Instance(regex);
-            var instance = new TerminalInstance(regex.Instances.Count, true);
-            instance.Epsilons.Add(index);
-            regex.Instances.Add(instance);
-            for (var i = start; i <= index; ++i)
+            var size = regex.Size;
+            var instance = regex.Add(new TerminalInstance(regex, true));
+            instance.AddEpsilon(index);
+            foreach (var i in Range(start, size))
             {
-                if (regex.Instances[i].Goal)
+                var inst = regex[i];
+                if (inst.Goal)
                 {
-                    regex.Instances[i].AddEpsilon(instance.Index);
-                    regex.Instances[i].Goal = false;
+                    inst.AddEpsilon(instance.Index);
+                    inst.Goal = false;
                 }
             }
             return instance.Index;
@@ -49,13 +51,14 @@ namespace TrueRegex
 
         internal override int Instance(Regex regex)
         {
-            var start = regex.Instances.Count;
+            var start = regex.Size;
             var index = this.expr.Instance(regex);
-            for(var i = start; i <= index; ++i)
+            foreach (var i in Range(start, regex.Size))
             {
-                if (regex.Instances[i].Goal)
+                var inst = regex[i];
+                if (inst.Goal)
                 {
-                    regex.Instances[i].AddEpsilon(index);
+                    inst.AddEpsilon(index);
                 }
             }
             return index;
