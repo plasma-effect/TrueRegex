@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TrueRegex
 {
-    public class Sequence:Expression
+    public class Sequence : Expression
     {
         Expression lhs;
         Expression rhs;
@@ -20,7 +20,7 @@ namespace TrueRegex
             var rhsStart = this.rhs.Instance(regex);
             var start = regex.Size;
             var index = this.lhs.Instance(regex);
-            for(var i = start; i < regex.Size; ++i)
+            for (var i = start; i < regex.Size; ++i)
             {
                 var inst = regex[i];
                 if (inst.Goal)

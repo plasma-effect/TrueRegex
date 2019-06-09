@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TrueRegex
 {
-    public class Select:Expression
+    public class Select : Expression
     {
         Expression lhs;
         Expression rhs;
@@ -20,7 +20,7 @@ namespace TrueRegex
             var leftInstance = this.lhs.Instance(regex);
             var rightInstace = this.rhs.Instance(regex);
             var ret = leftInstance;
-            if(this.lhs is Select)
+            if (this.lhs is Select)
             {
                 regex[leftInstance].AddEpsilon(rightInstace);
             }

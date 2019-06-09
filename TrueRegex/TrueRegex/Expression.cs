@@ -39,19 +39,32 @@ namespace TrueRegex
                 return this.internalRegex;
             }
         }
+        /// <summary>
+        /// Check that this expr matches [str]
+        /// </summary>
+        /// <param name="str">string</param>
+        /// <returns>Match Result</returns>
         public bool Match(IEnumerable<char> str)
         {
             return this.InternalRegex.Match(str);
         }
-
+        /// <summary>
+        /// Return length of shortest matched substring of [str]
+        /// </summary>
+        /// <param name="str">string</param>
+        /// <returns>length(if matched substring exists) or null(otherwise)</returns>
         public int? FirstMatch(IEnumerable<char> str)
         {
             return this.InternalRegex.FirstMatch(str);
         }
-
+        /// <summary>
+        /// Return length of longest matched substring of [str]
+        /// </summary>
+        /// <param name="str">string</param>
+        /// <returns>length(if matched substring exists) or null(otherwise)</returns>
         public int? LastMatch(IEnumerable<char> str)
         {
-            return this.InternalRegex.FirstMatch(str);
+            return this.InternalRegex.LastMatch(str);
         }
     }
 

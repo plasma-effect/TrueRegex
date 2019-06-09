@@ -13,7 +13,7 @@ namespace TrueRegex
         int? LastMatch(IEnumerable<char> str);
     }
 
-    public class Regex:IRegex
+    internal class Regex:IRegex
     {
         List<Instance> instances;
         int startIndex;
@@ -31,7 +31,6 @@ namespace TrueRegex
             }
             return flags.Any(inner);
         }
-        
         public bool Match(IEnumerable<char> str)
         {
             InitialSet(out var flags, out var nexts, out var epsil, out var enext);
@@ -41,7 +40,6 @@ namespace TrueRegex
             }
             return Check(flags);
         }
-
         public int? FirstMatch(IEnumerable<char> str)
         {
             InitialSet(out var flags, out var nexts, out var epsil, out var enext);

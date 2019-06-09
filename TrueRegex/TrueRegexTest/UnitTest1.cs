@@ -1,57 +1,50 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TrueRegex;
-using TrueRegex.Predefind;
 using System.Diagnostics;
 using static System.Linq.Enumerable;
+using static TrueRegex.Predefined;
 
 namespace TrueRegexTest
 {
     [TestClass]
     public class UnitTest1
     {
-        private Regex Create(Expression expr)
-        {
-            var regex = new Regex(expr);
-            //Debug.WriteLine(regex);
-            return regex;
-        }
-
         [TestMethod]
         public void AtomicTest()
         {
             {
-                var regex = Create(new Atomic(char.IsLower));
-                Assert.AreEqual(regex.Match("a"), true);
-                Assert.AreEqual(regex.Match("A"), false);
-                Assert.AreEqual(regex.Match(""), false);
+                var expr = new Atomic(char.IsLower);
+                Assert.AreEqual(expr.Match("a"), true);
+                Assert.AreEqual(expr.Match("A"), false);
+                Assert.AreEqual(expr.Match(""), false);
             }
             {
-                var regex = Create(new Chars('1', '2', '3', '4', '5'));
-                Assert.AreEqual(regex.Match("1"), true);
-                Assert.AreEqual(regex.Match("2"), true);
-                Assert.AreEqual(regex.Match("3"), true);
-                Assert.AreEqual(regex.Match("4"), true);
-                Assert.AreEqual(regex.Match("5"), true);
-                Assert.AreEqual(regex.Match("6"), false);
-                Assert.AreEqual(regex.Match(""), false);
+                var expr = Chars.Create('1', '2', '3', '4', '5');
+                Assert.AreEqual(expr.Match("1"), true);
+                Assert.AreEqual(expr.Match("2"), true);
+                Assert.AreEqual(expr.Match("3"), true);
+                Assert.AreEqual(expr.Match("4"), true);
+                Assert.AreEqual(expr.Match("5"), true);
+                Assert.AreEqual(expr.Match("6"), false);
+                Assert.AreEqual(expr.Match(""), false);
             }
         }
 
         [TestMethod]
         public void RepeatTest()
         {
-            var baseExpr = new Chars('a');
+            var baseExpr = Chars.Create('a');
             {
-                var regex = Create(~baseExpr);
-                Assert.AreEqual(regex.Match("aaa"), true);
-                Assert.AreEqual(regex.Match("aab"), false);
-                Assert.AreEqual(regex.Match(""), true);
+                var expr = ~baseExpr;
+                Assert.AreEqual(expr.Match("aaa"), true);
+                Assert.AreEqual(expr.Match("aab"), false);
+                Assert.AreEqual(expr.Match(""), true);
             }
             {
-                var regex = Create(+baseExpr);
-                Assert.AreEqual(regex.Match("aaa"), true);
-                Assert.AreEqual(regex.Match("aab"), false);
-                Assert.AreEqual(regex.Match(""), false);
+                var expr = +baseExpr;
+                Assert.AreEqual(expr.Match("aaa"), true);
+                Assert.AreEqual(expr.Match("aab"), false);
+                Assert.AreEqual(expr.Match(""), false);
             }
         }
 
@@ -59,15 +52,15 @@ namespace TrueRegexTest
         public void SequenceTest()
         {
             {
-                var regex = Create(Chars.Create('a', 'b') + Chars.Create('a', 'b'));
-                Assert.AreEqual(regex.Match("aa"), true);
-                Assert.AreEqual(regex.Match("ab"), true);
-                Assert.AreEqual(regex.Match("ba"), true);
-                Assert.AreEqual(regex.Match("bb"), true);
-                Assert.AreEqual(regex.Match("aaa"), false);
-                Assert.AreEqual(regex.Match("a"), false);
-                Assert.AreEqual(regex.Match("ac"), false);
-                Assert.AreEqual(regex.Match(""), false);
+                var expr = Chars.Create('a', 'b') + Chars.Create('a', 'b');
+                Assert.AreEqual(expr.Match("aa"), true);
+                Assert.AreEqual(expr.Match("ab"), true);
+                Assert.AreEqual(expr.Match("ba"), true);
+                Assert.AreEqual(expr.Match("bb"), true);
+                Assert.AreEqual(expr.Match("aaa"), false);
+                Assert.AreEqual(expr.Match("a"), false);
+                Assert.AreEqual(expr.Match("ac"), false);
+                Assert.AreEqual(expr.Match(""), false);
             }
         }
         
@@ -75,10 +68,10 @@ namespace TrueRegexTest
         public void OptionalTest()
         {
             {
-                var regex = Create(-Chars.Create('a'));
-                Assert.AreEqual(regex.Match("a"), true);
-                Assert.AreEqual(regex.Match("b"), false);
-                Assert.AreEqual(regex.Match(""), true);
+                var expr = -Chars.Create('a');
+                Assert.AreEqual(expr.Match("a"), true);
+                Assert.AreEqual(expr.Match("b"), false);
+                Assert.AreEqual(expr.Match(""), true);
             }
         }
 
@@ -86,13 +79,13 @@ namespace TrueRegexTest
         public void SelectTest()
         {
             {
-                var regex = Create(Chars.Create('a') | Chars.Create('b') | Chars.Create('c'));
-                Assert.AreEqual(regex.Match("a"), true);
-                Assert.AreEqual(regex.Match("b"), true);
-                Assert.AreEqual(regex.Match("c"), true);
-                Assert.AreEqual(regex.Match("d"), false);
-                Assert.AreEqual(regex.Match("ab"), false);
-                Assert.AreEqual(regex.Match(""), false);
+                var expr =Chars.Create('a') | Chars.Create('b') | Chars.Create('c');
+                Assert.AreEqual(expr.Match("a"), true);
+                Assert.AreEqual(expr.Match("b"), true);
+                Assert.AreEqual(expr.Match("c"), true);
+                Assert.AreEqual(expr.Match("d"), false);
+                Assert.AreEqual(expr.Match("ab"), false);
+                Assert.AreEqual(expr.Match(""), false);
             }
         }
 
@@ -100,37 +93,30 @@ namespace TrueRegexTest
         public void PredefinedTest()
         {
             {
-                var regex = Create(String.Create("abc"));
-                Assert.AreEqual(regex.Match("abc"), true);
-                Assert.AreEqual(regex.Match("ab"), false);
-                Assert.AreEqual(regex.Match("abd"), false);
-                Assert.AreEqual(regex.Match(""), false);
+                var expr = String.Create("abc");
+                Assert.AreEqual(expr.Match("abc"), true);
+                Assert.AreEqual(expr.Match("ab"), false);
+                Assert.AreEqual(expr.Match("abd"), false);
+                Assert.AreEqual(expr.Match(""), false);
             }
             {
-                var regex = Create(new Number());
-                Assert.AreEqual(regex.Match("123"), true);
-                Assert.AreEqual(regex.Match("12a"), false);
-                Assert.AreEqual(regex.Match(""), false);
+                var expr = String.Create("");
+                Assert.AreEqual(expr.Match("a"), false);
+                Assert.AreEqual(expr.Match(""), true);
             }
             {
-                var regex = Create(new Name());
-                Assert.AreEqual(regex.Match("123"), true);
-                Assert.AreEqual(regex.Match("abc"), true);
-                Assert.AreEqual(regex.Match("ab1"), true);
-                Assert.AreEqual(regex.Match("1ab"), true);
-                Assert.AreEqual(regex.Match("1,2"), false);
-                Assert.AreEqual(regex.Match(""), false);
-            }
-        }
-
-        [TestMethod]
-        public void DirectMatchTest()
-        {
-            {
-                var expr = String.Create("123");
+                var expr = Number;
                 Assert.AreEqual(expr.Match("123"), true);
-                Assert.AreEqual(expr.Match("124"), false);
-                Assert.AreEqual(expr.Match("12"), false);
+                Assert.AreEqual(expr.Match("12a"), false);
+                Assert.AreEqual(expr.Match(""), false);
+            }
+            {
+                var expr = Name;
+                Assert.AreEqual(expr.Match("123"), true);
+                Assert.AreEqual(expr.Match("abc"), true);
+                Assert.AreEqual(expr.Match("ab1"), true);
+                Assert.AreEqual(expr.Match("1ab"), true);
+                Assert.AreEqual(expr.Match("1,2"), false);
                 Assert.AreEqual(expr.Match(""), false);
             }
         }
@@ -139,12 +125,12 @@ namespace TrueRegexTest
         public void FirstAndLastTest()
         {
             {
-                var regex = Create(+String.Create("a"));
-                Assert.AreEqual(regex.FirstMatch("aaa"), 1);
-                Assert.AreEqual(regex.LastMatch("aaa"), 3);
-                Assert.AreEqual(regex.LastMatch("aab"), 2);
-                Assert.AreEqual(regex.FirstMatch("baa"), null);
-                Assert.AreEqual(regex.LastMatch("baa"), null);
+                var expr = +String.Create("a");
+                Assert.AreEqual(expr.FirstMatch("aaa"), 1);
+                Assert.AreEqual(expr.LastMatch("aaa"), 3);
+                Assert.AreEqual(expr.LastMatch("aab"), 2);
+                Assert.AreEqual(expr.FirstMatch("baa"), null);
+                Assert.AreEqual(expr.LastMatch("baa"), null);
             }
         }
     }
