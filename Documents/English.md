@@ -1,33 +1,33 @@
-# TrueRegexの概要
-コンピューターサイエンスの文脈で定義される[正規言語](https://ja.wikipedia.org/wiki/%E6%AD%A3%E8%A6%8F%E8%A8%80%E8%AA%9E)を表すExpressionクラス(演算子オーバーロードを定義するためにインターフェースではない)を提供するライブラリである。実際に言語をマッチさせるために内部では有向グラフを構成する。  
-構成されるグラフは非決定性有限オートマトンではなく以下で定義されるグラフである。
-- 頂点は終了状態かどうかを判別するbool値を持つ
-- 辺はεかFunc\<char, bool\>のどちらかを持つ
-- 開始状態を表す頂点がただ1つ存在する
+# About TrueRegex
+This is library for [Regular Language](https://en.wikipedia.org/wiki/Regular_language) defined in Computer Science. This library have Expression abstract class(for operator overload, it isn't interface). It construct a directed graph to match a string.  
+Constructed graph is not NFA but directed graph defined below.
+- each vertex have bool value that means that vertex is accept state or not
+- edge have ε or Func\<char, bool\>
+- there is one vertex that express initial state
 
-ただしこれに対応する非決定性有限オートマトンを構成することができるため問題ない。  
+But it is not problem because we can construct NFA from that graph.
 
-マッチのチェックの最悪時間計算量はO(N\*K^2\*logK)である(Nは文字列のサイズ、Kは上のグラフの頂点数)。この内K^2\*logKは現状わかっている上界であり、実際はこれより小さい可能性がある。
-# 提供されるクラスと定数
-提供されるクラスは全てnamespace TrueRegex内にあるが、static class Predefined内にこのライブラリの使用を補助するようなクラスや静的プロパティが定義されている。
+Worst time complexity for match is O(N\*K^2\*logK) (where N is string length and K is number of vertexes of above graph). \[K^2\*logK\] is upper bound I know, so real worst time complexity may be smaller than this.
+# class and static property
+classes are all in "namespace TrueRegex", and classes and properties that help you in "static class Predefined".
 ## public abstract class Expression
-正規言語を表現するクラスである。これ自体は抽象クラスであり、したがってインスタンスを生成することはできない。このクラスでは以下の関数が定義されている。
+Abstract class that express Regular Language.This class have below functions.
 ### public bool Match(IEnumerable\<char\> str)
-与えられた文字の列(通常はstringであろう)がExpressionと完全にマッチするかをチェックする。マッチした場合trueを返し、そうでない場合falseを返す。
+Check given character sequence(normally, that is string) matches Expression. if that sequence matches then return true, otherwise return false.
 ### public int? FirstMatch(IEnumerable\<char\> str)
-マッチする「先頭の文字を含む最小の部分文字列」の長さを返す。そのような部分文字列が存在しない場合nullを返す。
+Return length of "shortest continuous subsequence include first character" that matches Expression. If there is not that continuous subsequence, return null.
 ### public int? LastMatch(IEnumerable<char> str)
-マッチする「先頭の文字を含む最長の部分文字列」の長さを返す。そのような部分文字列が存在しない場合nullを返す。
+Return length of "longest continuous subsequence include first character" that matches Expression. If there is not that continuous subsequence, return null.
 
 ---
 ## public class Atomic : Expression
-Func\<char, bool\> funcを持ち「文字列が1文字で、かつその文字をcとしてfunc(c)がtrue」の場合のみマッチするExpression。以下の関数を持つ
+The Expression that have "Func\<char, bool\> func" and string matches when length of that string is one and func(c) is true where that string is \[c\]. This class have below function.
 ### public Atomic(Func\<char, bool\> func)
-コンストラクタ。
+Constructor.
 ### public static Atomic Create(Func\<char, bool\> func)
-そのままコンストラクタを呼ぶstatic関数。newを書きたくないときに使う。
-### 使用例
-以下使用例ではusing static System.Consoleをしているものとする。
+Static function that call constructor of Atomic. You can use this static function when you don't want to write "new Atomic(func)".
+### Example
+In all example include this, the code includes "using static System.Console;".
 ```csharp
 static void Main(string[] args)
 {
@@ -41,10 +41,10 @@ static void Main(string[] args)
 
 ---
 ## public class ZeroRepeat : Expression
-0回以上の繰り返しを表すExpression。コンストラクタから生成する以外に、Expressionに対し単項演算子~を適用することでも生成できる。以下の関数を持つ。
+The Expression that express repeat zero or more repetitions. You can use unary operator~ to construct this class instance. This class have below function.
 ### public ZeroRepeat(Expression expr)
-コンストラクタ。
-### 使用例
+Constructor.
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -64,10 +64,10 @@ static void Main(string[] args)
 
 ---
 ## public class OneRepeat : Expression
-1回以上の繰り返しを表すExpression。コンストラクタから生成する以外に、Expressionに対し単項演算子+を適用することでも生成できる。以下の関数を持つ。
+The Expression that express repeat one or more repetitions. You can use unary operator+ to construct this class instance. This class have below function.
 ### public OneRepeat(Expression expr)
-コンストラクタ。
-### 使用例
+Constuctor.
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -85,10 +85,10 @@ static void Main(string[] args)
 }
 ```
 ## public class Sequence : Expression
-2つのExpressionの連結を表すExpression。コンストラクタから生成する以外に、2つのExpressionに対し二項演算子+を適用することでも生成できる。以下の関数を持つ。
+The Expression that express sequence of 2 expressions. You can use binary operator+ to construct this class instance. This class have below function.
 ### public Sequence(Expression lhs, Expression rhs)
-コンストラクタ。
-### 使用例
+Constructor.
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -110,10 +110,10 @@ static void Main(string[] args)
 
 ---
 ## public class Optional : Expression
-省略可能を表すExpression。コンストラクタから生成する以外に、Expressionに対し単項演算子-を適用することでも生成できる。以下の関数を持つ。
+The Expression that express optional expression. You can use unary operator- to construct this class instance. This class have below function.
 ### public Optional(Expression expr)
-コンストラクタ。
-### 使用例
+Constructor.
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -133,10 +133,10 @@ static void Main(string[] args)
 
 ---
 ## public class Select : Expression
-2つのExpressionの和を表すExpression。コンストラクタから生成する以外に2つのExpressionに対し二項演算子 | を適用することでも生成できる。以下の関数を持つ。
+The Expression that express union of 2 expressions. You can use binary operator | to construct this class instance. This class have below function.
 ### public Select(Expression lhs, Expression rhs)
-コンストラクタ。
-### 使用例
+Constructor.
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -157,12 +157,12 @@ static void Main(string[] args)
 
 ---
 ## public class Predefined.Chars : Expression
-文字の集合setを持ち「文字列が1文字で、かつその文字をcとしてcがsetに含まれる」の場合のみマッチするExpression。以下の関数を持つ。
+The Expression that have set of character and string matches when length of that string is one, and \[c\] in that set where that string is \[c\]. This class have below functions.
 ### public Chars(IEnumerable\<char\> chars)
-コンストラクタ。
+Constructor.
 ### public static Chars Create(params char[] cs)
-そのままコンストラクタを呼ぶstatic関数。より明示的にどの文字のときマッチするか表明したり、単にnewを書きたくなかったりするときに使う。
-### 使用例
+Static function that call constructor of Chars. You can use this static function when you assert charater set explicitly or you don't want to write "new Predefined.Chars(cs)".
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -182,8 +182,8 @@ static void Main(string[] args)
 
 ---
 ## public static OneRepeat Predefined.Number { get; }
-1文字以上の数字の列にマッチするExpression。+Atomic.Create(char.IsNumber)と同じである。
-### 使用例
+The Expression that express sequence of numbers. This is equal to "+Atomic.Create(char.IsNumber)".
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -195,8 +195,8 @@ static void Main(string[] args)
 
 ---
 ## public static OneRepeat Name { get; }
-1文字以上の名前(数字のみのものを含む)にマッチするExpression。+Atomic.Create(char.IsLetterOrDigit)と同じである。
-### 使用例
+The Expression that express name(include constructed by only numbers). This is equal to "+Atomic.Create(char.IsLetterOrDigit)".
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -210,12 +210,12 @@ static void Main(string[] args)
 
 ---
 ## public class Predefined.String : Expression
-特定の文字列にマッチするExpression。以下の関数を持つ。
+The Expression that express specific string.
 ### public String(string str)
-コンストラクタ。
+Constructor.
 ### public static String Create(string str)
-そのままコンストラクタを呼ぶstatic関数。newを書きたくないときに使う。
-### 使用例
+Static function that call constructor of Atomic. You can use this static function when you don't want to write "new Predefined.String(str)".
+### Example
 ```csharp
 static void Main(string[] args)
 {
@@ -234,7 +234,7 @@ static void Main(string[] args)
 ```
 
 ---
-## FirstMatch関数とLastMatch関数の使用例
+## Example of "FirstMatch" and "LastMatch"
 ```csharp
 static void Main(string[] args)
 {
