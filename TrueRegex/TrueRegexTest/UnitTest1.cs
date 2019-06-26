@@ -90,6 +90,18 @@ namespace TrueRegexTest
         }
 
         [TestMethod]
+        public void NotTest()
+        {
+            {
+                var expr = !Number;
+                Assert.AreEqual(expr.Match("123"), false);
+                Assert.AreEqual(expr.Match("12a"), true);
+                Assert.AreEqual(expr.Match("a12"), true);
+                Assert.AreEqual(expr.Match(""), true);
+            }
+        }
+
+        [TestMethod]
         public void PredefinedTest()
         {
             {

@@ -156,6 +156,29 @@ static void Main(string[] args)
 ```
 
 ---
+## public class Not : Expression
+Expressionの否定を表すExpression。コンストラクタから生成する以外にExpressionに対し単項演算子 ! を適用することでも生成できる。以下の関数を持つ。
+### public Not(Expression expr)
+コンストラクタ。
+### 使用例
+```csharp
+static void Main(string[] args)
+{
+    var expr = +Atomic.Create(char.IsNumber);
+
+    var expr0 = new Not(expr);
+    WriteLine(expr0.Match("123"));
+    WriteLine(expr0.Match("12a"));
+    WriteLine(expr0.Match(""));
+
+    var expr1 = !expr;
+    WriteLine(expr1.Match("123"));
+    WriteLine(expr1.Match("12a"));
+    WriteLine(expr1.Match(""));
+}
+```
+
+---
 ## public class Predefined.Chars : Expression
 文字の集合setを持ち「文字列が1文字で、かつその文字をcとしてcがsetに含まれる」の場合のみマッチするExpression。以下の関数を持つ。
 ### public Chars(IEnumerable\<char\> chars)

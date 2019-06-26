@@ -5,14 +5,14 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/plasma-effect/TrueRegex</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.4.0</Version>
+    <Version>1.5.0</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Match string to Regular Expression(defined in Computer Science)</Description>
     <PackageProjectUrl>https://github.com/plasma-effect/TrueRegex</PackageProjectUrl>
     <Authors>plasma-effect</Authors>
     <Copyright>plasma-effect 2019</Copyright>
-    <PackageReleaseNotes>Change Predefined to static class, and change Number and Name to static properties.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add Not class and public static Not operator!(Expression)</PackageReleaseNotes>
     <Company />
   </PropertyGroup>
 

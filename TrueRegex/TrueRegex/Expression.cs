@@ -26,6 +26,10 @@ namespace TrueRegex
         {
             return new Select(lhs, rhs);
         }
+        public static Not operator!(Expression expr)
+        {
+            return new Not(expr);
+        }
 
         private Regex internalRegex;
         private Regex InternalRegex

@@ -156,6 +156,29 @@ static void Main(string[] args)
 ```
 
 ---
+## public class Not : Expression
+The Expression that express negate of expression. You can use unary operator ! to construct this class instance. This class have below function.
+### public Not(Expression expr)
+Constructor.
+### Example
+```csharp
+static void Main(string[] args)
+{
+    var expr = +Atomic.Create(char.IsNumber);
+
+    var expr0 = new Not(expr);
+    WriteLine(expr0.Match("123"));
+    WriteLine(expr0.Match("12a"));
+    WriteLine(expr0.Match(""));
+
+    var expr1 = !expr;
+    WriteLine(expr1.Match("123"));
+    WriteLine(expr1.Match("12a"));
+    WriteLine(expr1.Match(""));
+}
+```
+
+---
 ## public class Predefined.Chars : Expression
 The Expression that have set of character and string matches when length of that string is one, and \[c\] in that set where that string is \[c\]. This class have below functions.
 ### public Chars(IEnumerable\<char\> chars)

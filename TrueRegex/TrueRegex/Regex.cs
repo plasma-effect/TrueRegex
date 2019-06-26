@@ -16,10 +16,12 @@ namespace TrueRegex
     internal class Regex:IRegex
     {
         List<Instance> instances;
+        internal bool NotFlag { get; set; }
         int startIndex;
         public Regex(Expression expr)
         {
             this.instances = new List<Instance>();
+            this.NotFlag = false;
             this.startIndex = expr.Instance(this);
         }
 
@@ -29,7 +31,11 @@ namespace TrueRegex
             {
                 return this.instances[i].Goal;
             }
-            return flags.Any(inner);
+            bool notinner(int i)
+            {
+                return !this.instances[i].Goal;
+            }
+            return this.NotFlag ? flags.All(notinner) : flags.Any(inner);
         }
         public bool Match(IEnumerable<char> str)
         {
